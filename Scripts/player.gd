@@ -6,6 +6,8 @@ const JUMP_VELOCITY = 4.5
 @export var mouse_sensitivity : float = .01
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
+@export var ray : RayCast3D
+var hold_in_crosshair : Hold = null
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -31,6 +33,10 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+	
+	if ray.is_colliding() and ray.get_collider().get_parent() is Hold:
+		print("FOUND HOLD")
+		hold_in_crosshair = ray.get_collider().get_parent()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:

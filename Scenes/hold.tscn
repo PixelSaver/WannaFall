@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxvd21ajcdk1y"]
+
+[ext_resource type="Script" uid="uid://dtkrne3mygdix" path="res://Scripts/hold.gd" id="1_oji8j"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5a7ea"]
+shading_mode = 2
+albedo_color = Color(1, 0.49019608, 0.38431373, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8j60k"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_fo5ed"]
+points = PackedVector3Array(0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5)
+
+[node name="Hold" type="StaticBody3D"]
+collision_layer = 5
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_oji8j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_5a7ea")
+mesh = SubResource("BoxMesh_8j60k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_fo5ed")
