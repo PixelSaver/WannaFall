@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://co4muxroyfuur"]
+[gd_scene load_steps=7 format=3 uid="uid://co4muxroyfuur"]
 
-[ext_resource type="Script" uid="uid://d36y417wyl1cm" path="res://Scripts/player.gd" id="1_a02cp"]
+[ext_resource type="PackedScene" uid="uid://cqls451mowhda" path="res://Scenes/player.tscn" id="1_a02cp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_go701"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -21,10 +21,6 @@ size = Vector3(10, 1, 10)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5ukr8"]
 points = PackedVector3Array(-5, -0.5, -5, -5, 0.5, -5, 5, -0.5, -5, -5, -0.5, 5, -5, 0.5, 5, 5, 0.5, -5, 5, -0.5, 5, 5, 0.5, 5)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_o06y3"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_k7acu"]
-
 [node name="World" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -44,18 +40,5 @@ mesh = SubResource("BoxMesh_fo5ed")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("ConvexPolygonShape3D_5ukr8")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="Player" parent="." instance=ExtResource("1_a02cp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("1_a02cp")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-shape = SubResource("CapsuleShape3D_o06y3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
-mesh = SubResource("CapsuleMesh_k7acu")
-
-[node name="Head" type="Node3D" parent="CharacterBody3D"]
-
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/Head"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-current = true
