@@ -70,6 +70,7 @@ shape = SubResource("ConvexPolygonShape3D_5ukr8")
 
 [node name="Hold" parent="Node3D" instance=ExtResource("2_go701")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.495698, 4)
+collision_layer = 4
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Hold"]
 material_override = SubResource("StandardMaterial3D_go701")
