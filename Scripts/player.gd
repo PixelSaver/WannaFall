@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 
 const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
+const JUMP_VELOCITY = 10
 const GRAVITY = Vector3.DOWN * 20.
 @export var mouse_sensitivity : float = .01
 @onready var head: Node3D = $Head
@@ -60,13 +60,14 @@ func _input(event: InputEvent) -> void:
 			if hold.click_held == Hold.Click.LEFT:
 				attracting_holds.erase(hold)
 
-var spring_strength:float = 30
-var damping:float = 3
+var spring_strength:float = 20
+var damping:float = 9
+var softness:float = 0.1
 func attract_to_holds(delta:float):
 	if attracting_holds.size() == 0: return
 	for hold in attracting_holds:
 		var vec_to = self.global_position.direction_to(hold.global_position)
 		var dist = self.global_position.distance_to(hold.global_position)
-		velocity += vec_to * dist * spring_strength * delta
+		velocity += vec_to * spring_strength * delta * (dist)
 		velocity -= velocity * damping * delta
 		
