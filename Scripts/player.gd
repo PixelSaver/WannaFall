@@ -8,6 +8,7 @@ const JUMP_VELOCITY = 4.5
 @onready var camera: Camera3D = $Head/Camera3D
 @export var ray : RayCast3D
 var hold_in_crosshair : Hold = null
+var attracting_holds : Array[Hold] = []
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -32,11 +33,15 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
+	attract_to_holds(delta)
+	
 	move_and_slide()
 	
 	if ray.is_colliding() and ray.get_collider() is Hold:
-		print("FOUND HOLD")
 		hold_in_crosshair = ray.get_collider()
+	else:
+		hold_in_crosshair = null
+	
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -44,3 +49,17 @@ func _input(event: InputEvent) -> void:
 		var rot_y = head.rotation.x - event.relative.y * mouse_sensitivity
 		rot_y = clamp(rot_y, -PI/2., PI/2.)
 		head.rotation.x = rot_y
+	elif Input.is_action_pressed("left_click") and hold_in_crosshair:
+		attracting_holds.append(hold_in_crosshair)
+	elif Input.is_action_just_released("left_click"):
+		for hold in attracting_holds:
+			if hold.click_held == Hold.Click.LEFT:
+				attracting_holds.erase(hold)
+	
+func attract_to_holds(delta:float):
+	if attracting_holds.size() == 0: return
+	for hold in attracting_holds:
+		var vec_to = self.global_position.direction_to(hold.global_position)
+		var dist = self.global_position.distance_to(hold.global_position)
+		self.velocity += delta * vec_to * dist * 10
+		
