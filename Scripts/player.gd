@@ -3,7 +3,7 @@ extends CharacterBody3D
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 10
-const GRAVITY = Vector3.DOWN * 20.
+const GRAVITY = Vector3.DOWN * 10.
 @export var mouse_sensitivity : float = .01
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
@@ -30,12 +30,12 @@ func _physics_process(delta: float) -> void:
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
+		attract_to_holds(delta)
 	else:
+		attract_to_holds(delta)
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
-	attract_to_holds(delta)
-	
 	
 	move_and_slide()
 	
@@ -52,6 +52,7 @@ func _input(event: InputEvent) -> void:
 		rot_y = clamp(rot_y, -PI/2., PI/2.)
 		head.rotation.x = rot_y
 	elif Input.is_action_pressed("left_click") and hold_in_crosshair:
+		if attracting_holds.find(hold_in_crosshair) > -1: return
 		hold_in_crosshair.click_held = Hold.Click.LEFT
 		attracting_holds.append(hold_in_crosshair)
 	elif Input.is_action_just_released("left_click"):
@@ -60,14 +61,13 @@ func _input(event: InputEvent) -> void:
 			if hold.click_held == Hold.Click.LEFT:
 				attracting_holds.erase(hold)
 
-var spring_strength:float = 20
-var damping:float = 9
-var softness:float = 0.1
+var spring_strength:float = 50
+var grab_range:float = 5
 func attract_to_holds(delta:float):
 	if attracting_holds.size() == 0: return
 	for hold in attracting_holds:
 		var vec_to = self.global_position.direction_to(hold.global_position)
 		var dist = self.global_position.distance_to(hold.global_position)
-		velocity += vec_to * spring_strength * delta * (dist)
-		velocity -= velocity * damping * delta
+		velocity += vec_to * spring_strength * delta * (dist/(dist+grab_range))
+		velocity.y -= velocity.y * .5 * delta
 		
