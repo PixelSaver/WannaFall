@@ -34,9 +34,9 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
-	if ray.is_colliding() and ray.get_collider().get_parent() is Hold:
+	if ray.is_colliding() and ray.get_collider() is Hold:
 		print("FOUND HOLD")
-		hold_in_crosshair = ray.get_collider().get_parent()
+		hold_in_crosshair = ray.get_collider()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
