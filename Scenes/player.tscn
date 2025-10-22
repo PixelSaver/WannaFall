@@ -6,7 +6,7 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_k7acu"]
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("ray")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("ray") groups=["player"]]
 script = ExtResource("1_v0iea")
 ray = NodePath("Head/RayCast3D")
 
@@ -23,5 +23,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 current = true
 
 [node name="RayCast3D" type="RayCast3D" parent="Head"]
-target_position = Vector3(0, 0, -10)
+target_position = Vector3(0, 0, -8)
 collision_mask = 4

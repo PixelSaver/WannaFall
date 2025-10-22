@@ -1,5 +1,7 @@
 extends CharacterBody3D
+class_name Player
 
+signal can_grab(hold:Hold, left:Hold, right:Hold)
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 10
@@ -26,7 +28,7 @@ var hold_in_crosshair: Hold = null
 var left_hand_hold: Hold = null
 var right_hand_hold: Hold = null
 
-enum ClimbState { GROUND, HANGING, PULLING_UP }
+enum ClimbState { GROUND, HANGING, PULLING_UP, AIR }
 var climb_state = ClimbState.GROUND
 
 func _ready() -> void:
@@ -37,6 +39,7 @@ func _physics_process(delta: float) -> void:
 		hold_in_crosshair = ray.get_collider()
 	else:
 		hold_in_crosshair = null
+	can_grab.emit(hold_in_crosshair, left_hand_hold, right_hand_hold)
 	
 	var is_grabbing = left_hand_hold != null or right_hand_hold != null
 	
@@ -71,6 +74,8 @@ func handle_ground_movement(delta:float):
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 func handle_air_movement(delta: float):
+	climb_state = ClimbState.AIR
+	
 	velocity += GRAVITY * delta
 	
 	var input_dir := Input.get_vector("left", "right", "up", "down")
