@@ -7,7 +7,7 @@ const GRAVITY = Vector3.DOWN * 20
 
 @export_category("Holding Physics Tweaks")
 @export var mouse_sensitivity: float = 0.01
-@export var spring_strength: float = 100.0
+@export var spring_strength: float = 60.0
 @export var spring_damping: float = 0.85
 @export var swing_force: float = 15.
 @export var grab_range: float = 3.0
