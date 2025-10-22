@@ -5,6 +5,7 @@ class_name Hold
 enum Click {
 	LEFT,
 	RIGHT,
+	NONE,
 }
 
 var click_held : Click
