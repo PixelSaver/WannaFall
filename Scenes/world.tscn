@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://co4muxroyfuur"]
+[gd_scene load_steps=16 format=3 uid="uid://co4muxroyfuur"]
 
 [ext_resource type="PackedScene" uid="uid://cqls451mowhda" path="res://Scenes/player.tscn" id="1_a02cp"]
 [ext_resource type="PackedScene" uid="uid://cxvd21ajcdk1y" path="res://Scenes/hold.tscn" id="2_go701"]
@@ -40,6 +40,14 @@ albedo_color = Color(1, 0.49019608, 0.38431373, 1)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_8j60k"]
 points = PackedVector3Array(0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5)
 
+[sub_resource type="Gradient" id="Gradient_go701"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 0.50980395)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5a7ea"]
+gradient = SubResource("Gradient_go701")
+width = 1
+
 [node name="World" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -52,57 +60,121 @@ shadow_enabled = true
 [node name="Player" parent="." instance=ExtResource("1_a02cp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Statics" type="Node3D" parent="."]
 
-[node name="Floor" type="StaticBody3D" parent="Node3D"]
+[node name="Floor" type="StaticBody3D" parent="Statics"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Floor"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_fo5ed")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Floor"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Floor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("ConvexPolygonShape3D_5ukr8")
 
-[node name="Wall" type="StaticBody3D" parent="Node3D"]
+[node name="Wall" type="StaticBody3D" parent="Statics"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Wall"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Wall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
 mesh = SubResource("BoxMesh_a02cp")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Wall"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Wall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
 shape = SubResource("ConvexPolygonShape3D_go701")
 
-[node name="Wall2" type="StaticBody3D" parent="Node3D"]
+[node name="Wall2" type="StaticBody3D" parent="Statics"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Wall2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Wall2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
 mesh = SubResource("BoxMesh_a02cp")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Wall2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Wall2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
 shape = SubResource("ConvexPolygonShape3D_5a7ea")
 
-[node name="Hold" parent="Node3D" instance=ExtResource("2_go701")]
+[node name="Hold" parent="Statics" instance=ExtResource("2_go701")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.495698, 3.5126157)
-collision_layer = 4
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Hold"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Hold"]
 material_override = SubResource("StandardMaterial3D_go701")
 mesh = SubResource("BoxMesh_5a7ea")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Hold"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Hold"]
 shape = SubResource("ConvexPolygonShape3D_8j60k")
 
-[node name="Hold2" parent="Node3D" instance=ExtResource("2_go701")]
+[node name="Hold2" parent="Statics" instance=ExtResource("2_go701")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.571782, 8.29401, -0.48738337)
-collision_layer = 4
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Hold2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Hold2"]
 material_override = SubResource("StandardMaterial3D_go701")
 mesh = SubResource("BoxMesh_5a7ea")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Hold2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Hold2"]
 shape = SubResource("ConvexPolygonShape3D_8j60k")
+
+[node name="Wall3" type="StaticBody3D" parent="Statics"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.029582739, 6, -0.45780063)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Wall3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
+mesh = SubResource("BoxMesh_a02cp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Wall3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
+shape = SubResource("ConvexPolygonShape3D_5a7ea")
+
+[node name="Hold3" parent="Statics" instance=ExtResource("2_go701")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.45780075, 14.29401, -4.029583)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Hold3"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Hold3"]
+shape = SubResource("ConvexPolygonShape3D_8j60k")
+
+[node name="Wall4" type="StaticBody3D" parent="Statics"]
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -0.42821765, 12, -0.48738384)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Wall4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
+mesh = SubResource("BoxMesh_a02cp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Wall4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
+shape = SubResource("ConvexPolygonShape3D_5a7ea")
+
+[node name="Hold4" parent="Statics" instance=ExtResource("2_go701")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4, 20.29401, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Statics/Hold4"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Statics/Hold4"]
+shape = SubResource("ConvexPolygonShape3D_8j60k")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/CenterContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = SubResource("GradientTexture1D_5a7ea")
+expand_mode = 3
