@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dtkrne3mygdix" path="res://Scripts/hold.gd" id="1_oji8j"]
 
 [node name="Hold" type="StaticBody3D"]
-collision_layer = 5
+collision_layer = 4
 axis_lock_linear_x = true
 axis_lock_linear_y = true
 axis_lock_linear_z = true
@@ -11,3 +11,4 @@ axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 script = ExtResource("1_oji8j")
+metadata/_edit_group_ = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://co4muxroyfuur"]
+[gd_scene load_steps=14 format=3 uid="uid://co4muxroyfuur"]
 
 [ext_resource type="PackedScene" uid="uid://cqls451mowhda" path="res://Scenes/player.tscn" id="1_a02cp"]
 [ext_resource type="PackedScene" uid="uid://cxvd21ajcdk1y" path="res://Scenes/hold.tscn" id="2_go701"]
@@ -25,6 +25,12 @@ points = PackedVector3Array(-5, -0.5, -5, -5, 0.5, -5, 5, -0.5, -5, -5, -0.5, 5,
 [sub_resource type="BoxMesh" id="BoxMesh_a02cp"]
 size = Vector3(10, 10, 1)
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_go701"]
+points = PackedVector3Array(5, 5, 0.5, 5, 5, -0.5, -5, 5, 0.5, 5, -5, 0.5, 5, -5, -0.5, -5, 5, -0.5, -5, -5, 0.5, -5, -5, -0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5a7ea"]
+points = PackedVector3Array(5, 5, 0.5, 5, 5, -0.5, -5, 5, 0.5, 5, -5, 0.5, 5, -5, -0.5, -5, 5, -0.5, -5, -5, 0.5, -5, -5, -0.5)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_go701"]
 shading_mode = 2
 albedo_color = Color(1, 0.49019608, 0.38431373, 1)
@@ -45,7 +51,6 @@ shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_a02cp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mouse_sensitivity = null
 
 [node name="Node3D" type="Node3D" parent="."]
 
@@ -66,11 +71,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
 mesh = SubResource("BoxMesh_a02cp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Wall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-shape = SubResource("ConvexPolygonShape3D_5ukr8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
+shape = SubResource("ConvexPolygonShape3D_go701")
+
+[node name="Wall2" type="StaticBody3D" parent="Node3D"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
+mesh = SubResource("BoxMesh_a02cp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4.5)
+shape = SubResource("ConvexPolygonShape3D_5a7ea")
 
 [node name="Hold" parent="Node3D" instance=ExtResource("2_go701")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.495698, 1.5126157)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.495698, 3.5126157)
 collision_layer = 4
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Hold"]
@@ -78,4 +94,15 @@ material_override = SubResource("StandardMaterial3D_go701")
 mesh = SubResource("BoxMesh_5a7ea")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Hold"]
+shape = SubResource("ConvexPolygonShape3D_8j60k")
+
+[node name="Hold2" parent="Node3D" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.571782, 8.29401, -0.48738337)
+collision_layer = 4
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Hold2"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Hold2"]
 shape = SubResource("ConvexPolygonShape3D_8j60k")
