@@ -81,7 +81,7 @@ func update_stamina(delta:float):
 	if is_hanging:
 		var drain = stamina_drain_rate * delta
 		
-		## Spreads stamina rate across both hands
+		# Spreads stamina rate across both hands
 		if both_hands_holding:
 			drain *= .5
 		
@@ -89,6 +89,11 @@ func update_stamina(delta:float):
 			l_stamina = max(0, l_stamina - drain)
 		if right_hand_hold:
 			r_stamina = max(0, r_stamina - drain)
+	elif is_on_floor():
+		if not left_hand_hold:
+			l_stamina = min(max_stamina, l_stamina + stamina_regen_rate*delta)
+		if not right_hand_hold:
+			r_stamina = min(max_stamina, r_stamina + stamina_regen_rate*delta)
 	
 
 func handle_ground_movement(delta:float):
