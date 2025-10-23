@@ -159,12 +159,46 @@ func handle_climbing_movement(delta:float):
 	var damping = 0.92 if is_pulling_up else spring_damping
 	velocity *= damping
 	
-	# Handle jump, only on the ground
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		#TODO Implement grab jump, so jump from hold
-		#perform_grab_jump
-		pass
-		velocity.y = JUMP_VELOCITY
+	if Input.is_action_just_pressed("jump"):
+		perform_grab_jump()
+
+func perform_grab_jump():
+	print("jumping grab")
+	var jumped = false
+	var jump_direction = Vector3.ZERO
+	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
+	
+	var stamina_cost = grab_jump_stamina_cost/2 if both_hands_holding else grab_jump_stamina_cost
+	
+	var forward = -head.basis.z
+	var up = Vector3.UP
+	
+	jump_direction = (up * 0.7 + forward * 0.3).normalized()
+	
+	# Left hand jump
+	if left_hand_hold and l_stamina >= stamina_cost:
+		l_stamina -= stamina_cost
+		force_release_hand(true)
+		l_can_grab = false
+		get_tree().create_timer(grab_jump_cooldown).timeout.connect(
+			func(): l_can_grab = true
+		)
+		jumped = true
+	
+	# Right hand jump
+	if right_hand_hold and r_stamina >= stamina_cost:
+		r_stamina -= stamina_cost
+		force_release_hand(false)
+		r_can_grab = false
+		get_tree().create_timer(grab_jump_cooldown).timeout.connect(
+			func(): r_can_grab = true
+		)
+		jumped = true
+	
+	if jumped:
+		velocity += jump_direction * grab_jump_force
+		print("Grab-jump! L: %.1f R: %.1f" % [l_stamina, r_stamina])
+		stamina_changed.emit(stamina_color(true), stamina_color(false))
 
 func update_stamina(delta:float):
 	var is_hanging:bool = (left_hand_hold != null or right_hand_hold != null) and not is_on_floor()
@@ -229,6 +263,7 @@ func _input(event: InputEvent) -> void:
 		if hold_in_crosshair and left_hand_hold == null and l_can_grab:
 			left_hand_hold = hold_in_crosshair
 			left_hand_hold.click_held = Hold.Click.LEFT
+			velocity *= 0.7
 	
 	elif Input.is_action_just_released("left_click"):
 		if left_hand_hold:
@@ -240,6 +275,7 @@ func _input(event: InputEvent) -> void:
 		if hold_in_crosshair and right_hand_hold == null and r_can_grab:
 			right_hand_hold = hold_in_crosshair
 			right_hand_hold.click_held = Hold.Click.RIGHT
+			velocity *= 0.7
 	
 	elif Input.is_action_just_released("right_click"):
 		if right_hand_hold:
