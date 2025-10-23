@@ -19,6 +19,23 @@ const GRAVITY = Vector3.DOWN * 20
 @export var air_control: float = 0.15
 @export var air_drag: float = 0.98 
 
+@export_category("Stamina")
+@export var max_stamina: float = 10.0
+## Per second when hanging
+@export var stamina_drain_rate: float = 1.0
+## Per second when grounded or both hands free
+@export var stamina_regen_rate: float = 2.0  
+## Extra stamina used when jumping
+@export var grab_jump_stamina_cost: float = 1.0
+@export var grab_jump_force: float = 8.0
+## Stamina waits to regen until this cooldown is over
+@export var grab_jump_cooldown: float = 0.15  
+
+var l_stamina: float = 10.0
+var r_stamina: float = 10.0
+var l_can_grab: bool = true
+var r_can_grab: bool = true
+
 @export_category("Misc")
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
@@ -34,6 +51,8 @@ var climb_state = ClimbState.GROUND
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	l_stamina = max_stamina
+	r_stamina = max_stamina
 
 func _physics_process(delta: float) -> void:
 	if ray.is_colliding() and ray.get_collider() is Hold:
@@ -50,7 +69,27 @@ func _physics_process(delta: float) -> void:
 		handle_ground_movement(delta)
 	else:
 		handle_air_movement(delta)
+	
+	update_stamina(delta)
+	
 	move_and_slide()
+
+func update_stamina(delta:float):
+	var is_hanging:bool = (left_hand_hold != null or right_hand_hold != null) and not is_on_floor()
+	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
+	
+	if is_hanging:
+		var drain = stamina_drain_rate * delta
+		
+		## Spreads stamina rate across both hands
+		if both_hands_holding:
+			drain *= .5
+		
+		if left_hand_hold:
+			l_stamina = max(0, l_stamina - drain)
+		if right_hand_hold:
+			r_stamina = max(0, r_stamina - drain)
+	
 
 func handle_ground_movement(delta:float):
 	climb_state = ClimbState.GROUND
