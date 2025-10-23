@@ -143,9 +143,6 @@ func handle_climbing_movement(delta:float):
 		pass
 		velocity.y = JUMP_VELOCITY
 
-func hold_jump():
-	pass
-
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		head.rotation.y -= event.relative.x * mouse_sensitivity
