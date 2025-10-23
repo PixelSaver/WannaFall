@@ -15,7 +15,7 @@ func _on_player_can_grab(hold_crosshair:Hold, l_hold:Hold, r_hold:Hold):
 	else:
 		crosshair_left.modulate = Color.WHITE
 		crosshair_right.modulate = Color.WHITE
-		
+	
 	if l_hold:
 		crosshair_left.modulate = Color.CORAL
 	if r_hold:

@@ -27,6 +27,7 @@ const GRAVITY = Vector3.DOWN * 20
 var hold_in_crosshair: Hold = null
 var left_hand_hold: Hold = null
 var right_hand_hold: Hold = null
+var is_grabbing : bool = false
 
 enum ClimbState { GROUND, HANGING, PULLING_UP, AIR }
 var climb_state = ClimbState.GROUND
@@ -41,7 +42,7 @@ func _physics_process(delta: float) -> void:
 		hold_in_crosshair = null
 	can_grab.emit(hold_in_crosshair, left_hand_hold, right_hand_hold)
 	
-	var is_grabbing = left_hand_hold != null or right_hand_hold != null
+	is_grabbing = left_hand_hold != null or right_hand_hold != null
 	
 	if is_grabbing:
 		handle_climbing_movement(delta)
@@ -97,7 +98,6 @@ func handle_air_movement(delta: float):
 		velocity.x = horizontal_vel.x
 		velocity.z = horizontal_vel.y
 
-
 func handle_climbing_movement(delta:float):
 	var holds = [left_hand_hold, right_hand_hold].filter(func(h): return h != null)
 	
@@ -142,6 +142,9 @@ func handle_climbing_movement(delta:float):
 		#perform_grab_jump
 		pass
 		velocity.y = JUMP_VELOCITY
+
+func hold_jump():
+	pass
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
