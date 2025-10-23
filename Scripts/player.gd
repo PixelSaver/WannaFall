@@ -1,7 +1,6 @@
 extends CharacterBody3D
 class_name Player
 
-signal can_grab(hold:Hold, left:Hold, right:Hold)
 signal stamina_changed(l_color:Color, r_color:Color)
 
 const SPEED = 5.0
@@ -62,7 +61,6 @@ func _physics_process(delta: float) -> void:
 		hold_in_crosshair = ray.get_collider()
 	else:
 		hold_in_crosshair = null
-	can_grab.emit(hold_in_crosshair, left_hand_hold, right_hand_hold)
 	
 	is_grabbing = left_hand_hold != null or right_hand_hold != null
 	
@@ -76,35 +74,6 @@ func _physics_process(delta: float) -> void:
 	update_stamina(delta)
 	
 	move_and_slide()
-
-func update_stamina(delta:float):
-	var is_hanging:bool = (left_hand_hold != null or right_hand_hold != null) and not is_on_floor()
-	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
-	
-	var old_stams = [l_stamina, r_stamina]
-	
-	if is_hanging:
-		var drain = stamina_drain_rate * delta
-		
-		# Spreads stamina rate across both hands
-		if both_hands_holding:
-			drain *= .5
-		
-		if left_hand_hold:
-			print("draining left, %s" % l_stamina)
-			l_stamina = max(0, l_stamina - drain)
-		if right_hand_hold:
-			r_stamina = max(0, r_stamina - drain)
-	elif is_on_floor():
-		
-		if not left_hand_hold:
-			l_stamina = min(max_stamina, l_stamina + stamina_regen_rate*delta)
-		if not right_hand_hold:
-			r_stamina = min(max_stamina, r_stamina + stamina_regen_rate*delta)
-	
-	if not is_equal_approx(l_stamina, old_stams[0]) or not is_equal_approx(r_stamina, old_stams[1]):
-		stamina_changed.emit(stamina_color(true), stamina_color(false))
-	
 
 func handle_ground_movement(delta:float):
 	climb_state = ClimbState.GROUND
@@ -196,6 +165,57 @@ func handle_climbing_movement(delta:float):
 		#perform_grab_jump
 		pass
 		velocity.y = JUMP_VELOCITY
+
+func update_stamina(delta:float):
+	var is_hanging:bool = (left_hand_hold != null or right_hand_hold != null) and not is_on_floor()
+	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
+	
+	var old_stams = [l_stamina, r_stamina]
+	
+	if is_hanging:
+		var drain = stamina_drain_rate * delta
+		
+		# Spreads stamina rate across both hands
+		if both_hands_holding:
+			drain *= .5
+		
+		if left_hand_hold:
+			print("draining left, %s" % l_stamina)
+			l_stamina = max(0, l_stamina - drain)
+			if l_stamina <= 0:
+				force_release_hand(true)
+				l_can_grab = false
+				get_tree().create_timer(0.5).timeout.connect(
+					func(): l_can_grab = true
+				)
+		if right_hand_hold:
+			r_stamina = max(0, r_stamina - drain)
+			if r_stamina <= 0:
+				force_release_hand(false)
+				r_can_grab = false
+				# Longer cooldown penalty when exhausted
+				get_tree().create_timer(0.5).timeout.connect(
+					func(): r_can_grab = true
+				)
+	elif is_on_floor():
+		
+		if not left_hand_hold:
+			l_stamina = min(max_stamina, l_stamina + stamina_regen_rate*delta)
+		if not right_hand_hold:
+			r_stamina = min(max_stamina, r_stamina + stamina_regen_rate*delta)
+	
+	if not is_equal_approx(l_stamina, old_stams[0]) or not is_equal_approx(r_stamina, old_stams[1]):
+		stamina_changed.emit(stamina_color(true), stamina_color(false))
+
+func force_release_hand(is_left: bool) -> void:
+	if is_left and left_hand_hold:
+		left_hand_hold.click_held = Hold.Click.NONE
+		left_hand_hold = null
+		print("Left hand released!")
+	elif not is_left and right_hand_hold:
+		right_hand_hold.click_held = Hold.Click.NONE
+		right_hand_hold = null
+		print("Right hand released!")
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
