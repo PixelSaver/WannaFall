@@ -226,7 +226,7 @@ func _input(event: InputEvent) -> void:
 	
 	# Left hand grab
 	if Input.is_action_just_pressed("left_click"):
-		if hold_in_crosshair and left_hand_hold == null:
+		if hold_in_crosshair and left_hand_hold == null and l_can_grab:
 			left_hand_hold = hold_in_crosshair
 			left_hand_hold.click_held = Hold.Click.LEFT
 	
@@ -237,7 +237,7 @@ func _input(event: InputEvent) -> void:
 	
 	# Right hand grab
 	if Input.is_action_just_pressed("right_click"):
-		if hold_in_crosshair and right_hand_hold == null:
+		if hold_in_crosshair and right_hand_hold == null and r_can_grab:
 			right_hand_hold = hold_in_crosshair
 			right_hand_hold.click_held = Hold.Click.RIGHT
 	
