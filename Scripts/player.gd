@@ -3,20 +3,20 @@ class_name Player
 
 signal stamina_changed(l_color:Color, r_color:Color)
 
-const SPEED = 5.0
+const SPEED = 10.0
 const JUMP_VELOCITY = 10
 const GRAVITY = Vector3.DOWN * 20
 
 @export_category("Holding Physics Tweaks")
 @export var mouse_sensitivity: float = 0.01
-@export var spring_strength: float = 60.0
+@export var spring_strength: float = 40.0
 @export var spring_damping: float = 0.85
 @export var swing_force: float = 15.
 @export var grab_range: float = 3.0
 @export var min_hold_distance: float = 0.3
 
 @export_category("Air Control")
-@export var air_control: float = 0.15
+@export var air_control: float = 0.4
 @export var air_drag: float = 0.98 
 
 @export_category("Stamina")
@@ -27,7 +27,7 @@ const GRAVITY = Vector3.DOWN * 20
 @export var stamina_regen_rate: float = 2.0  
 ## Extra stamina used when jumping
 @export var grab_jump_stamina_cost: float = 1.0
-@export var grab_jump_force: float = 8.0
+@export var grab_jump_force: float = 10.0
 ## Stamina waits to regen until this cooldown is over
 @export var grab_jump_cooldown: float = 0.15  
 @export var stamina_gradient: GradientTexture1D
@@ -137,10 +137,11 @@ func handle_climbing_movement(delta:float):
 	var is_pulling_up = -head.rotation.x > 0.5
 	if is_pulling_up:
 		climb_state = ClimbState.PULLING_UP
+		velocity += GRAVITY * delta * 0.3
 	else:
 		climb_state = ClimbState.HANGING
+		velocity -= GRAVITY * delta * 0.3
 	
-	velocity += GRAVITY * delta * 0.3
 	
 	var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (head.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -163,7 +164,6 @@ func handle_climbing_movement(delta:float):
 		perform_grab_jump()
 
 func perform_grab_jump():
-	print("jumping grab")
 	var jumped = false
 	var jump_direction = Vector3.ZERO
 	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
@@ -214,7 +214,6 @@ func update_stamina(delta:float):
 			drain *= .5
 		
 		if left_hand_hold:
-			print("draining left, %s" % l_stamina)
 			l_stamina = max(0, l_stamina - drain)
 			if l_stamina <= 0:
 				force_release_hand(true)
