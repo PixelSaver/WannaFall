@@ -2,6 +2,7 @@ extends CharacterBody3D
 class_name Player
 
 signal can_grab(hold:Hold, left:Hold, right:Hold)
+signal stamina_changed(l_color:Color, r_color:Color)
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 10
@@ -20,7 +21,7 @@ const GRAVITY = Vector3.DOWN * 20
 @export var air_drag: float = 0.98 
 
 @export_category("Stamina")
-@export var max_stamina: float = 10.0
+@export var max_stamina: float = 7.0
 ## Per second when hanging
 @export var stamina_drain_rate: float = 1.0
 ## Per second when grounded or both hands free
@@ -30,6 +31,7 @@ const GRAVITY = Vector3.DOWN * 20
 @export var grab_jump_force: float = 8.0
 ## Stamina waits to regen until this cooldown is over
 @export var grab_jump_cooldown: float = 0.15  
+@export var stamina_gradient: GradientTexture1D
 
 var l_stamina: float = 10.0
 var r_stamina: float = 10.0
@@ -53,6 +55,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	l_stamina = max_stamina
 	r_stamina = max_stamina
+	update_stamina(0)
 
 func _physics_process(delta: float) -> void:
 	if ray.is_colliding() and ray.get_collider() is Hold:
@@ -78,6 +81,8 @@ func update_stamina(delta:float):
 	var is_hanging:bool = (left_hand_hold != null or right_hand_hold != null) and not is_on_floor()
 	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
 	
+	var old_stams = [l_stamina, r_stamina]
+	
 	if is_hanging:
 		var drain = stamina_drain_rate * delta
 		
@@ -86,14 +91,19 @@ func update_stamina(delta:float):
 			drain *= .5
 		
 		if left_hand_hold:
+			print("draining left, %s" % l_stamina)
 			l_stamina = max(0, l_stamina - drain)
 		if right_hand_hold:
 			r_stamina = max(0, r_stamina - drain)
 	elif is_on_floor():
+		
 		if not left_hand_hold:
 			l_stamina = min(max_stamina, l_stamina + stamina_regen_rate*delta)
 		if not right_hand_hold:
 			r_stamina = min(max_stamina, r_stamina + stamina_regen_rate*delta)
+	
+	if not is_equal_approx(l_stamina, old_stams[0]) or not is_equal_approx(r_stamina, old_stams[1]):
+		stamina_changed.emit(stamina_color(true), stamina_color(false))
 	
 
 func handle_ground_movement(delta:float):
@@ -215,3 +225,12 @@ func _input(event: InputEvent) -> void:
 		if right_hand_hold:
 			right_hand_hold.click_held = Hold.Click.NONE
 			right_hand_hold = null
+
+func stamina_color(is_left:bool) -> Color:
+	if is_left:
+		var idx : float = 1-l_stamina/max_stamina
+		return stamina_gradient.gradient.sample(idx)
+	else:
+		var idx : float = 1-r_stamina/max_stamina
+		return stamina_gradient.gradient.sample(idx)
+	
