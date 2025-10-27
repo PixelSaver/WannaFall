@@ -1,9 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://co4muxroyfuur"]
+[gd_scene load_steps=21 format=3 uid="uid://co4muxroyfuur"]
 
 [ext_resource type="PackedScene" uid="uid://cqls451mowhda" path="res://Scenes/player.tscn" id="1_a02cp"]
 [ext_resource type="Script" uid="uid://2qdjtliuscg1" path="res://Scripts/level_manager.gd" id="2_8j60k"]
 [ext_resource type="PackedScene" uid="uid://cxvd21ajcdk1y" path="res://Scenes/hold.tscn" id="2_go701"]
 [ext_resource type="Script" uid="uid://46t3l5agrgye" path="res://Scripts/ui.gd" id="3_5a7ea"]
+[ext_resource type="Theme" uid="uid://421gor8nbyym" path="res://Assets/theme.tres" id="5_fo5ed"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_go701"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -179,6 +180,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("5_fo5ed")
 
 [node name="CenterContainer" type="CenterContainer" parent="UI/Control"]
 layout_mode = 1
