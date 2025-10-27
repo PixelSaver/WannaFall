@@ -1,9 +1,5 @@
 # WannaFall
 
-
-
-
-
 <a id="readme-top"></a>
 <!-- PROJECT SHIELDS -->
 <!--
@@ -70,14 +66,16 @@
 ## About The Project
 
 ### Overall
-Built for Hackclub Siege, 
+Built for Hackclub Siege W8, I had a lot less time than I thought I would have. Thus, this is quite incomplete and doesn't really have a lot to show for itself. The mechanics are clunky and you can definitely cheese the jumping system, but I'm honestly proud I got this to work this well for itself.
 
 ### What even is this?
-dunno
-* i wonder
+A simple climbing game inspired by White Knuckle
+* Left click and right click to use left and right hands to grab
+* Stamina for left and right hands
+* Jumping off of a hold to gain height
 
 ### What do I take out of this?
-
+Plan time accordingly. Just because I had time the last few weeks doesn't mean I have time the next few weeks. I shouldn't have let it go this late, and I hope to put in a full 10 hours into my next thing. Or just continue this one.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -85,11 +83,6 @@ dunno
 hmmmmm...
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p> 
-
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 ### Built With
@@ -115,7 +108,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 If you'd like to build it yourself, I used Godot 4.5. 
 
-1. Install Godot 4.4
+1. Install Godot 4.5
 2. Download and unzip the code
 3. Open the file with Godot project manager
 4. Go to Project > Export, add whichever platform you're on (MacOS, Windows) and then click export.
@@ -129,9 +122,11 @@ If you'd like to build it yourself, I used Godot 4.5.
 - [x] First Person Controller
 - [x] Holds that can be grabbed
 - [ ] Mechanics
+  - [x] Jumping off a hold 
+  - [x] Stamina per hand
   - [ ] Swinging
   - [ ] Vaulting
-  - [x] Jumping off a hold 
+- [ ] Ending that makes you realize you jumped out of a huge vault to see the world go up in flames because the society you live in stole the sun to fight the gods who abandoned them. Oops... didn't quite get here.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -159,9 +154,9 @@ Project Link: [https://github.com/PixelSaver/WannaFall](https://github.com/Pixel
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Many thanks for these people for letting me use their work for free! See 'ATTRIBUTIONS.MD' for a cleaner look!
-
-* https://github.com/Linko-3D/First-Person-Controller-FPS/blob/main/addons/fps_controller/player.gd
+Many thanks for these people for letting me use their work for free!
+* Heavily inspired by [White Knuckle](https://store.steampowered.com/app/3195790/White_Knuckle/)
+* Linko's [First Person Controller](https://github.com/Linko-3D/First-Person-Controller-FPS/blob/main/addons/fps_controller/player.gd) script I borrowed
 <!--
 * [Choose an Open Source License](https://choosealicense.com)
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
