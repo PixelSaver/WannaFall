@@ -126,6 +126,7 @@ If you'd like to build it yourself, I used Godot 4.5.
   - [x] Stamina per hand
   - [ ] Swinging
   - [ ] Vaulting
+- [ ] Sound design :( would make it so much better but I have no idea where to start
 - [ ] Ending that makes you realize you jumped out of a huge vault to see the world go up in flames because the society you live in stole the sun to fight the gods who abandoned them. Oops... didn't quite get here.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
