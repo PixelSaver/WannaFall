@@ -64,16 +64,29 @@ theme = ExtResource("1_f1kxn")
 theme_override_styles/panel = SubResource("StyleBoxFlat_je8vx")
 script = ExtResource("2_4s2ig")
 
-[node name="TextureRect2" type="TextureRect" parent="."]
+[node name="MarginContainer2" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.3
+anchor_left = 0.585
+anchor_top = 0.375
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.844
 grow_horizontal = 2
 grow_vertical = 2
-expand_mode = 3
-stretch_mode = 5
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer2"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.479834, 0.479834, 0.479834, 1)
+theme_override_font_sizes/normal_font_size = 50
+text = "WASD, Space, LMB, RMB
+Move around, jump, jump off of a hold, right and left click to hang, and have fun! "
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -86,27 +99,16 @@ mouse_filter = 2
 texture = SubResource("GradientTexture1D_7l1m5")
 expand_mode = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="TextureRect"]
+[node name="TextureRect2" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.43
+anchor_left = 0.3
 anchor_right = 1.0
-anchor_bottom = 0.31
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 0
-
-[node name="RichTextLabel" type="RichTextLabel" parent="TextureRect/MarginContainer2"]
-layout_mode = 2
-theme_override_colors/default_color = Color(0.479834, 0.479834, 0.479834, 1)
-theme_override_font_sizes/normal_font_size = 60
-text = "Welcome to It Gets Worse, where you start out with random upgrades and have to survive as the game slowly hands you debuffs. All while more enemies spawn. Good luck!"
-horizontal_alignment = 2
-vertical_alignment = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
