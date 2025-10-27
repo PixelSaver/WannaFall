@@ -1,7 +1,7 @@
 extends CharacterBody3D
 class_name Player
 
-signal can_grab(hold:Hold, left:Hold, right:Hold)
+signal stamina_changed(l_color:Color, r_color:Color)
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 10
@@ -9,15 +9,33 @@ const GRAVITY = Vector3.DOWN * 20
 
 @export_category("Holding Physics Tweaks")
 @export var mouse_sensitivity: float = 0.01
-@export var spring_strength: float = 60.0
+@export var spring_strength: float = 40.0
 @export var spring_damping: float = 0.85
 @export var swing_force: float = 15.
 @export var grab_range: float = 3.0
 @export var min_hold_distance: float = 0.3
 
 @export_category("Air Control")
-@export var air_control: float = 0.15
+@export var air_control: float = 0.4
 @export var air_drag: float = 0.98 
+
+@export_category("Stamina")
+@export var max_stamina: float = 7.0
+## Per second when hanging
+@export var stamina_drain_rate: float = 1.0
+## Per second when grounded or both hands free
+@export var stamina_regen_rate: float = 2.0  
+## Extra stamina used when jumping
+@export var grab_jump_stamina_cost: float = 1.0
+@export var grab_jump_force: float = 10.0
+## Stamina waits to regen until this cooldown is over
+@export var grab_jump_cooldown: float = 0.15  
+@export var stamina_gradient: GradientTexture1D
+
+var l_stamina: float = 10.0
+var r_stamina: float = 10.0
+var l_can_grab: bool = true
+var r_can_grab: bool = true
 
 @export_category("Misc")
 @onready var head: Node3D = $Head
@@ -34,13 +52,15 @@ var climb_state = ClimbState.GROUND
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	l_stamina = max_stamina
+	r_stamina = max_stamina
+	update_stamina(0)
 
 func _physics_process(delta: float) -> void:
 	if ray.is_colliding() and ray.get_collider() is Hold:
 		hold_in_crosshair = ray.get_collider()
 	else:
 		hold_in_crosshair = null
-	can_grab.emit(hold_in_crosshair, left_hand_hold, right_hand_hold)
 	
 	is_grabbing = left_hand_hold != null or right_hand_hold != null
 	
@@ -50,6 +70,9 @@ func _physics_process(delta: float) -> void:
 		handle_ground_movement(delta)
 	else:
 		handle_air_movement(delta)
+	
+	update_stamina(delta)
+	
 	move_and_slide()
 
 func handle_ground_movement(delta:float):
@@ -114,10 +137,11 @@ func handle_climbing_movement(delta:float):
 	var is_pulling_up = -head.rotation.x > 0.5
 	if is_pulling_up:
 		climb_state = ClimbState.PULLING_UP
+		velocity += GRAVITY * delta * 0.3
 	else:
 		climb_state = ClimbState.HANGING
+		velocity -= GRAVITY * delta * 0.3
 	
-	velocity += GRAVITY * delta * 0.3
 	
 	var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (head.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -136,15 +160,95 @@ func handle_climbing_movement(delta:float):
 	var damping = 0.92 if is_pulling_up else spring_damping
 	velocity *= damping
 	
-	# Handle jump, only on the ground
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		#TODO Implement grab jump, so jump from hold
-		#perform_grab_jump
-		pass
-		velocity.y = JUMP_VELOCITY
+	if Input.is_action_just_pressed("jump"):
+		perform_grab_jump()
 
-func hold_jump():
-	pass
+func perform_grab_jump():
+	var jumped = false
+	var jump_direction = Vector3.ZERO
+	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
+	
+	var stamina_cost = grab_jump_stamina_cost/2 if both_hands_holding else grab_jump_stamina_cost
+	
+	var forward = -head.basis.z
+	var up = Vector3.UP
+	
+	jump_direction = (up * 0.7 + forward * 0.3).normalized()
+	
+	# Left hand jump
+	if left_hand_hold and l_stamina >= stamina_cost:
+		l_stamina -= stamina_cost
+		force_release_hand(true)
+		l_can_grab = false
+		get_tree().create_timer(grab_jump_cooldown).timeout.connect(
+			func(): l_can_grab = true
+		)
+		jumped = true
+	
+	# Right hand jump
+	if right_hand_hold and r_stamina >= stamina_cost:
+		r_stamina -= stamina_cost
+		force_release_hand(false)
+		r_can_grab = false
+		get_tree().create_timer(grab_jump_cooldown).timeout.connect(
+			func(): r_can_grab = true
+		)
+		jumped = true
+	
+	if jumped:
+		velocity += jump_direction * grab_jump_force
+		print("Grab-jump! L: %.1f R: %.1f" % [l_stamina, r_stamina])
+		stamina_changed.emit(stamina_color(true), stamina_color(false))
+
+func update_stamina(delta:float):
+	var is_hanging:bool = (left_hand_hold != null or right_hand_hold != null) and not is_on_floor()
+	var both_hands_holding:bool = left_hand_hold != null and right_hand_hold != null
+	
+	var old_stams = [l_stamina, r_stamina]
+	
+	if is_hanging:
+		var drain = stamina_drain_rate * delta
+		
+		# Spreads stamina rate across both hands
+		if both_hands_holding:
+			drain *= .5
+		
+		if left_hand_hold:
+			l_stamina = max(0, l_stamina - drain)
+			if l_stamina <= 0:
+				force_release_hand(true)
+				l_can_grab = false
+				get_tree().create_timer(0.5).timeout.connect(
+					func(): l_can_grab = true
+				)
+		if right_hand_hold:
+			r_stamina = max(0, r_stamina - drain)
+			if r_stamina <= 0:
+				force_release_hand(false)
+				r_can_grab = false
+				# Longer cooldown penalty when exhausted
+				get_tree().create_timer(0.5).timeout.connect(
+					func(): r_can_grab = true
+				)
+	elif is_on_floor():
+		
+		if not left_hand_hold:
+			l_stamina = min(max_stamina, l_stamina + stamina_regen_rate*delta)
+		if not right_hand_hold:
+			r_stamina = min(max_stamina, r_stamina + stamina_regen_rate*delta)
+	
+	if not is_equal_approx(l_stamina, old_stams[0]) or not is_equal_approx(r_stamina, old_stams[1]):
+		stamina_changed.emit(stamina_color(true), stamina_color(false))
+
+func force_release_hand(is_left: bool) -> void:
+	if is_left and left_hand_hold:
+		left_hand_hold.click_held = Hold.Click.NONE
+		left_hand_hold = null
+		print("Left hand released!")
+	elif not is_left and right_hand_hold:
+		right_hand_hold.click_held = Hold.Click.NONE
+		right_hand_hold = null
+		print("Right hand released!")
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -155,9 +259,10 @@ func _input(event: InputEvent) -> void:
 	
 	# Left hand grab
 	if Input.is_action_just_pressed("left_click"):
-		if hold_in_crosshair and left_hand_hold == null:
+		if hold_in_crosshair and left_hand_hold == null and l_can_grab:
 			left_hand_hold = hold_in_crosshair
 			left_hand_hold.click_held = Hold.Click.LEFT
+			velocity *= 0.7
 	
 	elif Input.is_action_just_released("left_click"):
 		if left_hand_hold:
@@ -166,11 +271,21 @@ func _input(event: InputEvent) -> void:
 	
 	# Right hand grab
 	if Input.is_action_just_pressed("right_click"):
-		if hold_in_crosshair and right_hand_hold == null:
+		if hold_in_crosshair and right_hand_hold == null and r_can_grab:
 			right_hand_hold = hold_in_crosshair
 			right_hand_hold.click_held = Hold.Click.RIGHT
+			velocity *= 0.7
 	
 	elif Input.is_action_just_released("right_click"):
 		if right_hand_hold:
 			right_hand_hold.click_held = Hold.Click.NONE
 			right_hand_hold = null
+
+func stamina_color(is_left:bool) -> Color:
+	if is_left:
+		var idx : float = 1-l_stamina/max_stamina
+		return stamina_gradient.gradient.sample(idx)
+	else:
+		var idx : float = 1-r_stamina/max_stamina
+		return stamina_gradient.gradient.sample(idx)
+	
