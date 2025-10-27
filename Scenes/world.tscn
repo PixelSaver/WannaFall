@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://co4muxroyfuur"]
+[gd_scene load_steps=38 format=3 uid="uid://co4muxroyfuur"]
 
 [ext_resource type="PackedScene" uid="uid://cqls451mowhda" path="res://Scenes/player.tscn" id="1_a02cp"]
 [ext_resource type="PackedScene" uid="uid://cxvd21ajcdk1y" path="res://Scenes/hold.tscn" id="2_go701"]
@@ -81,6 +81,9 @@ size = Vector3(50, 1, 50)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_7yui6"]
 points = PackedVector3Array(-25, -0.5, -25, -25, 0.5, -25, 25, -0.5, -25, -25, -0.5, 25, -25, 0.5, 25, 25, 0.5, -25, 25, -0.5, 25, 25, 0.5, 25)
 
+[sub_resource type="BoxMesh" id="BoxMesh_o06y3"]
+size = Vector3(50, 1, 50)
+
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_c5t2i"]
 points = PackedVector3Array(-25, -0.5, -25, -25, 0.5, -25, 25, -0.5, -25, -25, -0.5, 25, -25, 0.5, 25, 25, 0.5, -25, 25, -0.5, 25, 25, 0.5, 25)
 
@@ -92,6 +95,23 @@ points = PackedVector3Array(5, 0.5, 10, 5, -0.5, 10, 5, 0.5, -10, -5, 0.5, 10, -
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_hgpy0"]
 points = PackedVector3Array(5, 0.5, 10, 5, -0.5, 10, 5, 0.5, -10, -5, 0.5, 10, -5, -0.5, 10, 5, -0.5, -10, -5, 0.5, -10, -5, -0.5, -10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8j60k"]
+size = Vector3(70, 20, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_e0ngr"]
+points = PackedVector3Array(35, 10, 0.5, 35, 10, -0.5, -35, 10, 0.5, 35, -10, 0.5, 35, -10, -0.5, -35, 10, -0.5, -35, -10, 0.5, -35, -10, -0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k7acu"]
+size = Vector3(8, 1, 4)
+
+[sub_resource type="TextMesh" id="TextMesh_5v1tr"]
+text = "You did it!!
+Thanks for playing! Check out the source code 
+to see how I did it 
+and also to see the acknowledgements
+Have a good rest of your day :)"
+font_size = 40
 
 [sub_resource type="Gradient" id="Gradient_go701"]
 offsets = PackedFloat32Array(1)
@@ -262,8 +282,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.9
 mesh = SubResource("TextMesh_fo5ed")
 
 [node name="MiddleSection" type="Node3D" parent="Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 50, 0)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 34.5, 0)
 
 [node name="Floor" type="Node3D" parent="Map/MiddleSection"]
 
@@ -274,6 +293,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.5, 0)
 mesh = SubResource("BoxMesh_5ukr8")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Floor/Floor1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.5, 0)
+shape = SubResource("ConvexPolygonShape3D_7yui6")
+
+[node name="Floor5" type="StaticBody3D" parent="Map/MiddleSection/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, 40, 37)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Floor/Floor5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.5, 0)
+mesh = SubResource("BoxMesh_o06y3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Floor/Floor5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.5, 0)
 shape = SubResource("ConvexPolygonShape3D_7yui6")
 
@@ -307,6 +337,164 @@ mesh = SubResource("BoxMesh_e0ngr")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Floor/Floor4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -15)
 shape = SubResource("ConvexPolygonShape3D_hgpy0")
+
+[node name="Wall" type="Node3D" parent="Map/MiddleSection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
+
+[node name="Wall" type="StaticBody3D" parent="Map/MiddleSection/Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Wall/Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 25)
+mesh = SubResource("BoxMesh_8j60k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Wall/Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 25)
+shape = SubResource("ConvexPolygonShape3D_e0ngr")
+
+[node name="Wall2" type="StaticBody3D" parent="Map/MiddleSection/Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Wall/Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 25)
+mesh = SubResource("BoxMesh_8j60k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Wall/Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 25)
+shape = SubResource("ConvexPolygonShape3D_e0ngr")
+
+[node name="Platform" type="StaticBody3D" parent="Map/MiddleSection/Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 30, 23)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Wall/Platform"]
+mesh = SubResource("BoxMesh_k7acu")
+
+[node name="Holds" type="Node3D" parent="Map/MiddleSection"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
+
+[node name="Hold" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold2" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 12, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold2"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold2"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold3" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold3"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold3"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold4" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.866619, 18, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold4"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold4"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold5" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.099808, 18, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold5"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold5"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold6" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.099808, 15, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold6"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold6"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold7" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.099808, 19.063164, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold7"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold7"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold8" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.099808, 23.44625, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold8"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold8"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold9" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.099808, 28.44625, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold9"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold9"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold10" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.561325, 29.894394, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold10"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold10"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold11" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.438675, 35.894394, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold11"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold11"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="Hold12" parent="Map/MiddleSection/Holds" instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.438675, 39.59439, 24.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection/Holds/Hold12"]
+material_override = SubResource("StandardMaterial3D_go701")
+mesh = SubResource("BoxMesh_5a7ea")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/MiddleSection/Holds/Hold12"]
+shape = SubResource("ConvexPolygonShape3D_k7acu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/MiddleSection"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4, 42.2751, 18.88426)
+mesh = SubResource("TextMesh_5v1tr")
 
 [node name="UI" type="CanvasLayer" parent="." node_paths=PackedStringArray("crosshair_left", "crosshair_right")]
 script = ExtResource("3_5a7ea")
