@@ -3,7 +3,7 @@ class_name Player
 
 signal stamina_changed(l_color:Color, r_color:Color)
 
-const SPEED = 10.0
+const SPEED = 5.0
 const JUMP_VELOCITY = 10
 const GRAVITY = Vector3.DOWN * 20
 
