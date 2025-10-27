@@ -79,8 +79,25 @@ Plan time accordingly. Just because I had time the last few weeks doesn't mean I
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Screenshots
-hmmmmm...
+### Gameplay
+Theres a video, then some screenshots. The screenshots are rather large, so I'm making them pop out. Apologies if this makes it dumb to read...
+
+  https://github.com/user-attachments/assets/c0d585dd-d227-48fd-92cf-dd14fa6b7263
+<details>
+  <summary><strong>Gameplay Image 1</strong></summary>
+  <img src="Media/gameplay1.png" alt="gameplay 1">
+</details>
+
+<details>
+  <summary><strong>Gameplay Image 2</strong></summary>
+  <img src="Media/gameplay2.png" alt="gameplay 2">
+</details>
+
+<details>
+  <summary><strong>Gameplay Image 3</strong></summary>
+  <img src="Media/gameplay3.png" alt="gameplay 3">
+</details>
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p> 
 
